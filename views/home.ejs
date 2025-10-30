@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URL Shortener</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
+    header { background: #2c3e50; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: white; margin-left: 1rem; text-decoration: none; }
+    .container { max-width: 800px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    form { display: flex; gap: 10px; margin-bottom: 2rem; }
+    input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { padding: 10px 20px; border: none; border-radius: 5px; background: #3498db; color: white; cursor: pointer; }
+    button:hover { background: #2980b9; }
+    .url-list { margin-top: 2rem; }
+    .url-item { padding: 10px; border-bottom: 1px solid #eee; }
+    .url-item a { color: #3498db; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>URL Shortener</h2>
+    <nav>
+      <% if (user) { %>
+        <span>Welcome, <%= user.name %></span>
+        <a href="/user/logout">Logout</a>
+      <% } else { %>
+        <a href="/user/signup">Signup</a>
+        <a href="/user/login">Login</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="container">
+    <% if (user) { %>
+      <form action="/url" method="POST">
+        <input type="text" name="url" placeholder="Enter your URL" required>
+        <button type="submit">Shorten</button>
+      </form>
+    <% } else { %>
+      <p><a href="/user/login">Login</a> to shorten URLs.</p>
+    <% } %>
+
+    <div class="url-list">
+      <% if (urls && urls.length > 0) { %>
+        <% urls.forEach(url => { %>
+          <div class="url-item">
+            <p>
+              <strong>Short URL:</strong>
+              <a href="/<%= url.shortId %>" target="_blank">http://localhost:8000/<%= url.shortId %></a>
+            </p>
+            <p><strong>Original:</strong> <%= url.redirectURL %></p>
+            <p><strong>Clicks:</strong> <%= url.visitHistory.length %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No URLs yet.</p>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
